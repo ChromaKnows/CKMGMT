@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kristopher Audio Workstation Qualification Report</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Audio Workstation Setup & Health Report</title>
 <style>
 :root{--bg:#0b0f14;--panel:#111821;--line:#22303d;--text:#eaf2f8;--muted:#8fa3b5;--cyan:#35d0ff;--amber:#ffb454;--green:#63d297;--red:#ff6b6b;--shadow:0 18px 50px rgba(0,0,0,.28)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(rgba(53,208,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(53,208,255,.035) 1px,transparent 1px),radial-gradient(circle at 15% 0%,rgba(53,208,255,.12),transparent 34%),radial-gradient(circle at 100% 20%,rgba(255,180,84,.08),transparent 28%),var(--bg);background-size:34px 34px,34px 34px,auto,auto,auto;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
@@ -15,84 +17,368 @@ table{width:100%;border-collapse:collapse;font-size:13px}th{color:var(--muted);f
 </style>
 </head>
 <body><div class="wrap">
-<section class="hero"><div class="eyebrow">Production System Qualification • Sept 28–29, 2026</div><h1>Kristopher Audio Workstation<br><span class="cyanText">Setup & Health Report</span></h1><div class="sub">Dell Precision 7530 • Ableton Live 12 Suite • Universal Audio Apollo Twin USB • Shure SM7B. This report documents the working baseline, changes made, performance findings, known limitations, startup workflow, and the next items to revisit after real-world pressure testing.</div><div class="status-row"><div class="chip green"><span class="dot"></span>Production-usable baseline established</div><div class="chip cyan"><span class="dot"></span>Heavy Ableton project plays cleanly</div><div class="chip amber"><span class="dot"></span>UAD software update deferred</div></div></section>
 
-<section class="section"><div class="section-title"><h2>Executive Summary</h2><span>Current state</span></div><div class="grid">
-<div class="card c3"><div class="kicker">Ableton idle CPU</div><div class="metric">36–42%</div><div class="muted small">Large real-world project, transport stopped.</div></div>
-<div class="card c3"><div class="kicker">Heavy project peak</div><div class="metric">~70%</div><div class="muted small">Clean playback after USB Safeguard was enabled.</div></div>
-<div class="card c3"><div class="kicker">CPU peak temp</div><div class="metric">~88°C</div><div class="muted small">No thermal throttling observed.</div></div>
-<div class="card c3"><div class="kicker">C: free space</div><div class="metric">139 GB</div><div class="muted small">Improved from ~91 GB after clearing the Recycle Bin.</div></div>
-<div class="card c8"><div class="kicker">Overall assessment</div><div style="font-size:18px;font-weight:800;margin-bottom:8px">The Precision 7530 is currently usable for Kristopher’s production workflow.</div><div class="muted">The real Ableton workload is stable with the native Universal Audio USB ASIO driver, 48 kHz sample rate, 1024-sample buffer, and USB Safeguard enabled. Hardware thermals are healthy enough for the tested workload, the CPU boosts correctly, no WHEA hardware errors were observed, and the Apollo/USB driver did not emerge as the primary DPC-latency offender.</div><div class="callout green"><b>Recommended now:</b> Leave the working audio configuration unchanged and let Kristopher pressure-test it in normal production.</div></div>
-<div class="card c4"><div class="kicker">Known limitations</div><ul class="list small"><li>Elevated <b>ACPI.sys</b> DPC latency remains.</li><li>UAD software is still <b>9.15.1</b>.</li><li>Apollo may require opening Console once after boot.</li><li>Only one 32 GB RAM module is installed.</li><li>Windows detects only Intel UHD 630 graphics.</li></ul></div>
-</div></section>
+<section class="hero">
+  <div class="eyebrow">Production Workstation • Public-Safe Technical Reference</div>
+  <h1>Audio Workstation<br><span class="cyanText">Setup & Health Report</span></h1>
+  <div class="sub">
+    Ableton Live 12 • Universal Audio Apollo Twin USB • Shure SM7B.
+    This public-safe reference documents the known-good production configuration,
+    operating notes, troubleshooting workflow, and maintenance items without exposing
+    personal identifiers or detailed system fingerprinting information.
+  </div>
+  <div class="status-row">
+    <div class="chip green"><span class="dot"></span>Production-usable baseline established</div>
+    <div class="chip cyan"><span class="dot"></span>Heavy project playback tested cleanly</div>
+    <div class="chip amber"><span class="dot"></span>Driver/software maintenance deferred</div>
+  </div>
+</section>
 
-<section class="section"><div class="section-title"><h2>Known-Good Production Configuration</h2><span>Do not change casually</span></div><div class="grid">
-<div class="card c4"><div class="kicker">Apollo / Console</div><div class="kv"><div>Sample rate</div><div>48 kHz</div><div>Clock source</div><div>Internal</div><div>Buffer</div><div>1024 samples</div><div>USB Safeguard</div><div class="ok">ON</div><div>Input Delay Compensation</div><div>Medium</div><div>Alt Count</div><div>0</div><div>Monitor reference</div><div>20 dBu</div><div>Line 3/4 reference</div><div>+4 dBu</div></div></div>
-<div class="card c4"><div class="kicker">Ableton Live 12</div><div class="kv"><div>Driver Type</div><div>ASIO</div><div>Audio Device</div><div>Universal Audio USB</div><div>Sample Rate</div><div>48,000 Hz</div><div>Vocal Track Monitor</div><div>OFF</div><div>Direct mic monitoring</div><div>Apollo</div></div><div class="callout"><b>Important:</b> Native Universal Audio USB ASIO produced clean microphone recordings. FL Studio ASIO did not.</div></div>
-<div class="card c4"><div class="kicker">Windows Audio</div><div class="kv"><div>Output</div><div>Speakers — Universal Audio Twin USB</div><div>Input</div><div>Line — Universal Audio Twin USB</div><div>Format</div><div>24-bit / 48 kHz</div><div>Exclusive Mode</div><div>OFF</div><div>Power Plan</div><div>High Performance</div><div>Page File</div><div>System managed</div></div></div>
-</div></section>
+<section class="section">
+  <div class="section-title"><h2>Current Status</h2><span>Production baseline</span></div>
+  <div class="grid">
+    <div class="card c4">
+      <div class="kicker">Audio stability</div>
+      <div class="metric">Stable</div>
+      <div class="muted small">Heavy real-world Ableton project tested successfully with the documented configuration.</div>
+    </div>
+    <div class="card c4">
+      <div class="kicker">Thermal health</div>
+      <div class="metric">Good</div>
+      <div class="muted small">No thermal throttling observed during the production workload test.</div>
+    </div>
+    <div class="card c4">
+      <div class="kicker">Hardware errors</div>
+      <div class="metric">None</div>
+      <div class="muted small">No WHEA hardware errors were observed during testing.</div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>Microphone & Monitoring Chain</h2><span>SM7B baseline</span></div><div class="grid">
-<div class="card c6"><div class="kicker">Signal path</div><div style="font-size:22px;font-weight:900;letter-spacing:-.02em">Shure SM7B → Apollo Analog 1 → Apollo headphones</div><div class="divider"></div><div class="kv"><div>48V phantom power</div><div class="ok">OFF</div><div>FetHead</div><div>Not needed currently</div><div>PREAMP / CH1 knob mode</div><div>Mic gain</div><div>HEADPHONE knob mode</div><div>Headphone volume</div></div></div>
-<div class="card c6"><div class="kicker">Monitoring note</div><div class="muted">Apollo’s headphone level and mic preamp gain are independent. For vocals, Kristopher should monitor directly through the Apollo and keep the Ableton track’s Monitor control <b>OFF</b> to avoid a delayed duplicate signal.</div><div class="callout warn"><b>Startup workaround:</b> if the mic hardware meter responds but neither direct monitoring nor Windows input works after boot, open <b>UAD Console once</b>. During testing, Console immediately restored both.</div></div>
-</div></section>
+    <div class="card c8">
+      <div class="kicker">Overall assessment</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:8px">The workstation is ready for normal production pressure testing.</div>
+      <div class="muted">
+        The tested Ableton workload is stable with the native Universal Audio USB ASIO driver,
+        48 kHz sample rate, 1024-sample buffer, and USB Safeguard enabled. The next useful
+        information should come from normal production sessions rather than additional synthetic tuning.
+      </div>
+      <div class="callout green"><b>Recommended now:</b> Keep the working baseline unchanged unless a repeatable problem appears.</div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>Performance & Hardware Findings</h2><span>Measured on the Precision 7530</span></div><div class="grid">
-<div class="card c7"><table><thead><tr><th>Area</th><th>Finding</th><th>Status</th></tr></thead><tbody>
-<tr><td>CPU</td><td>Intel Core i7-8850H, 6C/12T; turbo behavior confirmed</td><td><span class="tag ok">HEALTHY</span></td></tr>
-<tr><td>Thermals</td><td>~88°C peak during real Ableton run; no thermal throttling</td><td><span class="tag ok">HEALTHY</span></td></tr>
-<tr><td>RAM</td><td>32 GB DDR4-2667, single 32 GB module</td><td><span class="tag warn">UPGRADE OPTION</span></td></tr>
-<tr><td>Storage</td><td>C: 950.8 GB total / 139 GB free after cleanup</td><td><span class="tag ok">IMPROVED</span></td></tr>
-<tr><td>Drives</td><td>NVMe/SSD temperatures normal; no warning/failure flags observed</td><td><span class="tag ok">HEALTHY</span></td></tr>
-<tr><td>GPU</td><td>Windows currently detects Intel UHD Graphics 630 only</td><td><span class="tag info">NOT AUDIO-CRITICAL</span></td></tr>
-<tr><td>WHEA</td><td>0 hardware errors observed during HWiNFO test</td><td><span class="tag ok">HEALTHY</span></td></tr>
-</tbody></table></div>
-<div class="card c5"><div class="kicker">Storage profile</div><div class="small muted">Largest user-profile categories identified:</div><div style="margin-top:12px"><div class="small">Desktop — 194.6 GB</div><div class="bar"><div class="fill" style="width:100%"></div></div><div class="small" style="margin-top:10px">Downloads — 143.1 GB</div><div class="bar"><div class="fill amber" style="width:73.5%"></div></div><div class="small" style="margin-top:10px">Documents — 105.8 GB</div><div class="bar"><div class="fill green" style="width:54.4%"></div></div><div class="small" style="margin-top:10px">AppData — 35.3 GB</div><div class="bar"><div class="fill" style="width:18.1%"></div></div></div><div class="callout"><b>Future cleanup target:</b> Downloads is the safest place to inspect first. Do not bulk-delete Desktop or Documents because they may contain active production files, sample libraries, stems, or project assets.</div></div>
-</div></section>
+    <div class="card c4">
+      <div class="kicker">Known limitations</div>
+      <ul class="list small">
+        <li>Elevated <b>ACPI.sys</b> DPC latency remains a known Windows-level limitation.</li>
+        <li>Universal Audio software should be updated during a planned maintenance window.</li>
+        <li>Apollo may currently require opening Console once after boot.</li>
+        <li>Future RAM/storage improvements may provide additional headroom.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-<section class="section"><div class="section-title"><h2>LatencyMon Findings</h2><span>Real-time audio suitability</span></div><div class="grid">
-<div class="card c6"><div class="kicker">Run 1 — normal networking</div><div class="kv"><div>Highest interrupt → process latency</div><div>~1150 µs</div><div>Highest DPC execution</div><div>~1318 µs</div><div>Highest DPC driver</div><div>ACPI.sys</div><div>Hard page faults</div><div>4612</div><div>Top page-fault process</div><div>msedgewebview2.exe</div></div></div>
-<div class="card c6"><div class="kicker">Run 2 — Wi-Fi disabled</div><div class="kv"><div>Highest interrupt → process latency</div><div>~177 µs</div><div>Highest DPC execution</div><div>~1368 µs</div><div>Highest DPC driver</div><div>ACPI.sys</div><div>Hard page faults</div><div>477</div><div>Network drivers</div><div>Much lower</div></div></div>
-<div class="card c12"><div class="callout warn"><b>Interpretation:</b> networking contributed background latency/page-fault noise, but <b>ACPI.sys remained the dominant DPC outlier</b>. The Apollo/UAD USB drivers were not the primary DPC offenders in the idle tests. Because the real Ableton project is currently stable, BIOS/power-management “surgery” was intentionally deferred rather than chasing a synthetic benchmark at the expense of a working system.</div></div>
-</div></section>
+<section class="section">
+  <div class="section-title"><h2>Known-Good Production Configuration</h2><span>Primary reference</span></div>
+  <div class="grid">
+    <div class="card c4">
+      <div class="kicker">Apollo / Console</div>
+      <div class="kv">
+        <div>Sample rate</div><div>48 kHz</div>
+        <div>Clock source</div><div>Internal</div>
+        <div>Buffer</div><div>1024 samples</div>
+        <div>USB Safeguard</div><div class="ok">ON</div>
+        <div>Input Delay Compensation</div><div>Medium</div>
+      </div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>Changes Made</h2><span>System modifications completed</span></div><div class="grid">
-<div class="card c6"><ul class="list"><li>Created and activated Windows <b>High Performance</b> power plan.</li><li>Verified the Windows page file is <b>system managed</b>; no manual page-file tuning performed.</li><li>Set Windows playback and recording defaults to the Apollo.</li><li>Disabled Windows Exclusive Mode on Apollo playback and recording endpoints.</li><li>Confirmed Windows microphone permissions are enabled.</li><li>Changed Ableton from FL Studio ASIO to <b>Universal Audio USB ASIO</b>.</li><li>Set Apollo buffer to <b>1024 samples</b>.</li><li>Enabled <b>USB Safeguard</b>.</li></ul></div>
-<div class="card c6"><ul class="list"><li>Installed <b>HWiNFO64</b> for hardware/thermal diagnostics.</li><li>Installed <b>LatencyMon</b> for real-time driver/DPC diagnostics.</li><li>Disabled HWiNFO EC sensor monitoring to avoid adding extra polling latency during tests.</li><li>Cleared approximately <b>47.6 GB</b> from the Windows Recycle Bin.</li><li>Changed <b>PACE License Services</b> from Disabled/Stopped to <b>Automatic + Running</b>.</li><li>Documented UAD Console as the current post-boot Apollo “wake-up” workaround.</li></ul></div>
-</div></section>
+    <div class="card c4">
+      <div class="kicker">Ableton Live 12</div>
+      <div class="kv">
+        <div>Driver Type</div><div>ASIO</div>
+        <div>Audio Device</div><div>Universal Audio USB</div>
+        <div>Sample Rate</div><div>48,000 Hz</div>
+        <div>Vocal Track Monitor</div><div>OFF</div>
+        <div>Direct mic monitoring</div><div>Apollo</div>
+      </div>
+      <div class="callout"><b>Important:</b> Native Universal Audio USB ASIO produced clean microphone recordings during testing.</div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>iLok / PACE Status</h2><span>Resolved startup dependency</span></div><div class="grid"><div class="card c12"><div class="kicker">Before</div><div class="muted">PACE License Services was <b>Stopped</b> and <b>Disabled</b>, which explains why protected plug-ins could throw licensing errors unless iLok License Manager was manually opened first.</div><div class="divider"></div><div class="kicker">After</div><div style="font-size:18px;font-weight:800" class="ok">PaceLicenseDServices = Running • Automatic</div><div class="muted small" style="margin-top:5px">No licenses, activations, or plug-ins were removed or changed.</div></div></div></section>
+    <div class="card c4">
+      <div class="kicker">Windows Audio</div>
+      <div class="kv">
+        <div>Output</div><div>Universal Audio Twin USB</div>
+        <div>Input</div><div>Universal Audio Twin USB</div>
+        <div>Format</div><div>24-bit / 48 kHz</div>
+        <div>Exclusive Mode</div><div>OFF</div>
+        <div>Power Plan</div><div>High Performance</div>
+        <div>Page File</div><div>System managed</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<section class="section"><div class="section-title"><h2>UAD / Apollo Status</h2><span>Deferred near-term maintenance</span></div><div class="grid">
-<div class="card c5"><div class="kicker">Installed</div><div class="metric">UAD 9.15.1</div><div class="muted small">Driver / UAD Powered Plug-Ins build 9.15.1.2731.</div></div>
-<div class="card c7"><div class="kicker">Reason update was deferred</div><div class="muted">UA Connect requires Kristopher’s Universal Audio account credentials, and he was not certain which existing account owns the hardware/plugins. The current audio setup is already functional, so updating immediately before he needs to work would introduce unnecessary risk.</div><div class="callout warn"><b>Near-term task:</b> recover the existing UA account, update the UAD software/driver stack on a day with time for a reboot and verification pass, then re-test whether Apollo monitoring and Windows input initialize correctly without manually opening Console.</div></div>
-</div></section>
+<section class="section">
+  <div class="section-title"><h2>Microphone & Monitoring</h2><span>Known-good signal path</span></div>
+  <div class="grid">
+    <div class="card c6">
+      <div class="kicker">Signal path</div>
+      <div style="font-size:22px;font-weight:900;letter-spacing:-.02em">Shure SM7B → Apollo Analog 1 → Apollo headphones</div>
+      <div class="divider"></div>
+      <div class="kv">
+        <div>48V phantom power</div><div class="ok">OFF</div>
+        <div>FetHead</div><div>Not needed currently</div>
+        <div>PREAMP / CH1 mode</div><div>Mic gain</div>
+        <div>HEADPHONE mode</div><div>Headphone volume</div>
+      </div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>Daily Startup & Recovery Procedure</h2><span>Fast reference for Kristopher</span></div><div class="grid">
-<div class="card c6"><div class="kicker">Normal cold start</div><div class="steps"><div class="step"><b>Power/connect the Apollo.</b><span class="muted small">Have the interface available before the computer starts.</span></div><div class="step"><b>Start Windows.</b><span class="muted small">Allow the desktop and services to finish loading.</span></div><div class="step"><b>Open UAD Console once.</b><span class="muted small">Current workaround if monitoring/Windows input has not initialized.</span></div><div class="step"><b>Open Ableton.</b><span class="muted small">Use the known-good UA USB / 48 kHz / 1024 configuration.</span></div></div></div>
-<div class="card c6"><div class="kicker">If Apollo is not recognized after Windows restart</div><div class="steps"><div class="step"><b>Let Windows finish loading.</b></div><div class="step"><b>Power-cycle Apollo.</b><span class="muted small">Off → wait ~5 seconds → on.</span></div><div class="step"><b>Open UAD Console once.</b></div><div class="step"><b>Test mic + headphones before opening the project.</b></div></div></div>
-</div></section>
+    <div class="card c6">
+      <div class="kicker">Monitoring workflow</div>
+      <div class="muted">
+        Monitor vocals directly through the Apollo and keep the Ableton vocal track Monitor control
+        <b>OFF</b> to avoid hearing a delayed duplicate signal.
+      </div>
+      <div class="callout warn"><b>Current startup workaround:</b> if the mic hardware meter responds but monitoring or Windows input does not, open <b>UAD Console once</b>.</div>
+    </div>
+  </div>
+</section>
 
-<section class="section"><div class="section-title"><h2>Diagnostic Tools Installed</h2><span>Use only when needed</span></div><div class="grid">
-<div class="card c6"><div class="kicker">HWiNFO64</div><div class="muted">Hardware health tool used to monitor CPU temperatures, clocks, power limits, RAM, GPU, drive temperatures, throttling, and hardware-error indicators.</div><div class="callout"><b>Use it when:</b> fans suddenly behave differently, performance drops, the system feels hot, after hardware maintenance, or when qualifying a different computer.</div></div>
-<div class="card c6"><div class="kicker">LatencyMon</div><div class="muted">Real-time Windows latency diagnostic used to detect long-running ISR/DPC routines, driver interference, and hard page faults that can cause pops, clicks, stutters, or dropouts even when total CPU usage looks acceptable.</div><div class="callout"><b>Use it when:</b> audio suddenly starts crackling, after major Windows/driver updates, after changing interfaces/drivers, or when comparing another production machine.</div></div>
-</div></section>
+<section class="section">
+  <div class="section-title"><h2>System Health Findings</h2><span>Generalized public summary</span></div>
+  <div class="grid">
+    <div class="card c7">
+      <table>
+        <thead><tr><th>Area</th><th>Finding</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>CPU</td><td>Boost behavior confirmed during testing</td><td><span class="tag ok">HEALTHY</span></td></tr>
+          <tr><td>Thermals</td><td>No thermal throttling observed under the tested Ableton workload</td><td><span class="tag ok">HEALTHY</span></td></tr>
+          <tr><td>Memory</td><td>Current configuration is functional; additional matched memory is a future option</td><td><span class="tag warn">OPTIONAL</span></td></tr>
+          <tr><td>Storage</td><td>Free space improved; future cleanup should focus on non-production downloads/archives first</td><td><span class="tag ok">IMPROVED</span></td></tr>
+          <tr><td>Drives</td><td>Drive temperatures and health indicators looked normal during testing</td><td><span class="tag ok">HEALTHY</span></td></tr>
+          <tr><td>Hardware errors</td><td>No WHEA hardware errors observed during the test period</td><td><span class="tag ok">HEALTHY</span></td></tr>
+        </tbody>
+      </table>
+    </div>
 
-<section class="section"><div class="section-title"><h2>What We Intentionally Did Not Change</h2><span>Stability-first decisions</span></div><div class="card c12"><table><tbody><tr><td>CPU/GPU</td><td>No overclocking or aggressive tuning.</td></tr><tr><td>BIOS</td><td>No risky latency-oriented BIOS changes.</td></tr><tr><td>Page file</td><td>No manual page-file size changes.</td></tr><tr><td>Projects</td><td>No destructive Ableton edits, random track disabling, or freezing/bouncing without Kristopher’s involvement.</td></tr><tr><td>Plug-ins</td><td>No plug-in removal.</td></tr><tr><td>iLok</td><td>No license removals or activations changed.</td></tr><tr><td>SM7B</td><td>No unnecessary 48V phantom power; FetHead left out because gain is currently sufficient.</td></tr></tbody></table></div></section>
+    <div class="card c5">
+      <div class="kicker">Storage guidance</div>
+      <div class="muted small">
+        Keep comfortable free space on the system drive. If cleanup is needed, inspect Downloads and old installers/archives first.
+        Avoid bulk deletion from Desktop, Documents, project folders, sample libraries, or application data.
+      </div>
+      <div class="callout"><b>Rule:</b> no destructive cleanup should be performed without reviewing exactly what will be removed.</div>
+    </div>
+  </div>
+</section>
 
-<section class="section"><div class="section-title"><h2>Pressure-Test Checklist</h2><span>Next real-world phase</span></div><div class="grid">
-<div class="card c7"><div class="steps"><div class="step"><b>Open several of Kristopher’s largest projects.</b><span class="muted small">Confirm project load time, plug-in authorization, and initial playback.</span></div><div class="step"><b>Produce normally for 30–60 minutes.</b><span class="muted small">Do not optimize around a benchmark; use real workflow.</span></div><div class="step"><b>Watch for repeatable failures.</b><span class="muted small">Dropouts, crackles, UAD disconnects, iLok errors, unusually high fans, or project-specific CPU spikes.</span></div><div class="step"><b>Only re-open diagnostics if a symptom appears.</b><span class="muted small">HWiNFO for thermal/power behavior; LatencyMon for driver/DPC issues.</span></div></div></div>
-<div class="card c5"><div class="kicker">Success criteria</div><ul class="list small"><li>Heavy projects remain clean at 48 kHz / 1024 / USB Safeguard ON.</li><li>No manual iLok launch is required.</li><li>Apollo remains stable for full sessions.</li><li>No new thermal-throttling behavior.</li><li>No repeatable dropouts during normal production.</li></ul><div class="callout green"><b>If these stay true:</b> stop optimizing. The workstation is doing its job.</div></div>
-</div></section>
+<section class="section">
+  <div class="section-title"><h2>LatencyMon Findings</h2><span>Real-time audio diagnostics</span></div>
+  <div class="grid">
+    <div class="card c6">
+      <div class="kicker">Primary finding</div>
+      <div style="font-size:20px;font-weight:850">ACPI.sys was the dominant DPC outlier.</div>
+      <div class="muted small" style="margin-top:8px">
+        This points toward Windows/firmware power-management behavior rather than a direct failure of the Apollo USB audio driver.
+      </div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>Future Upgrade / Expansion Options</h2><span>Not required tonight</span></div><div class="grid">
-<div class="card c4"><div class="kicker">RAM</div><div style="font-weight:800">Add a matched second DIMM</div><div class="muted small">Current system has one 32 GB DDR4-2667 module. A matched module would increase capacity and improve memory-channel configuration.</div></div>
-<div class="card c4"><div class="kicker">Storage</div><div style="font-weight:800">Move/archive inactive content</div><div class="muted small">Downloads is the first cleanup candidate. Preserve active projects and sample libraries.</div></div>
-<div class="card c4"><div class="kicker">Network DSP</div><div style="font-weight:800">AudioGridder evaluation</div><div class="muted small">A future option for offloading selected VST/VST3 processing to another wired-network computer. Not recommended for live mic paths where latency matters.</div></div>
-</div></section>
+    <div class="card c6">
+      <div class="kicker">Network comparison</div>
+      <div class="muted">
+        Disabling networking materially reduced background latency/page-fault noise, but the ACPI DPC spike remained.
+        Networking was therefore treated as a secondary contributor rather than the root cause.
+      </div>
+    </div>
 
-<section class="section"><div class="section-title"><h2>Backup Precision 5750 — Reference Only</h2><span>Future migration candidate</span></div><div class="grid"><div class="card c12"><table><thead><tr><th>Component</th><th>Precision 7530 (current)</th><th>Precision 5750 (backup)</th></tr></thead><tbody><tr><td>CPU</td><td>i7-8850H • 6C/12T</td><td>Xeon W-10885M • 8C/16T</td></tr><tr><td>RAM</td><td>32 GB • 1×32 GB • 2667 MHz</td><td>64 GB • 2×32 GB • 2933 MHz</td></tr><tr><td>GPU</td><td>Intel UHD 630 detected</td><td>NVIDIA Quadro RTX 3000 Max-Q + Intel P630</td></tr><tr><td>C: free</td><td>139 GB after cleanup</td><td>~1359 GB</td></tr></tbody></table><div class="callout warn"><b>Note:</b> LatencyMon testing on the 5750 was deferred because its system drive is BitLocker-encrypted and the temporary driver-signature workaround triggered BitLocker recovery. No BitLocker configuration was changed.</div></div></div></section>
+    <div class="card c12">
+      <div class="callout warn">
+        Because real Ableton playback is currently stable, risky BIOS or power-management changes were intentionally deferred.
+        Revisit only if a repeatable real-world audio problem appears.
+      </div>
+    </div>
+  </div>
+</section>
 
-<section class="section"><div class="section-title"><h2>Final Status</h2><span>Handoff</span></div><div class="card c12" style="border-color:rgba(99,210,151,.35);background:linear-gradient(180deg,rgba(26,48,39,.42),rgba(12,18,25,.96))"><div style="font-size:24px;font-weight:900" class="ok">Production-ready baseline established.</div><div class="muted" style="margin-top:7px;max-width:900px">Kristopher can resume production on this machine using the documented configuration. The next useful data should come from his real sessions, not additional synthetic tweaking. If a repeatable problem appears, use the diagnostic tools and notes above to isolate it before changing the working baseline.</div></div></section>
-<div class="footer">Kristopher Audio Workstation Setup & Health Report • September 2026<div class="print-note">Tip: use your browser’s Print → Save as PDF if you want a static copy.</div></div>
+<section class="section">
+  <div class="section-title"><h2>Changes Made</h2><span>Current workstation baseline</span></div>
+  <div class="grid">
+    <div class="card c6">
+      <ul class="list">
+        <li>Activated the Windows <b>High Performance</b> power plan.</li>
+        <li>Confirmed the Windows page file remains <b>system managed</b>.</li>
+        <li>Set Windows playback and recording defaults to the Apollo.</li>
+        <li>Disabled Windows Exclusive Mode on Apollo playback and recording endpoints.</li>
+        <li>Confirmed Windows microphone permissions.</li>
+        <li>Changed Ableton to <b>Universal Audio USB ASIO</b>.</li>
+        <li>Set Apollo buffer to <b>1024 samples</b>.</li>
+        <li>Enabled <b>USB Safeguard</b>.</li>
+      </ul>
+    </div>
+
+    <div class="card c6">
+      <ul class="list">
+        <li>Installed <b>HWiNFO64</b> for hardware and thermal diagnostics.</li>
+        <li>Installed <b>LatencyMon</b> for real-time Windows driver diagnostics.</li>
+        <li>Reduced system-drive clutter by clearing already-deleted Recycle Bin contents.</li>
+        <li>Changed <b>PACE License Services</b> from disabled/stopped to <b>Automatic + Running</b>.</li>
+        <li>Documented UAD Console as the current post-boot Apollo initialization workaround.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>iLok / PACE</h2><span>Startup dependency corrected</span></div>
+  <div class="card c12">
+    <div class="kicker">Resolved</div>
+    <div class="muted">
+      The PACE licensing service had been disabled/stopped. It was changed to start automatically and is now running.
+      This should reduce the need to manually launch iLok License Manager before opening projects with protected plug-ins.
+    </div>
+    <div class="callout green"><b>No license data was removed or changed.</b></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>UAD / Apollo Maintenance</h2><span>Planned update</span></div>
+  <div class="grid">
+    <div class="card c12">
+      <div class="kicker">Deferred intentionally</div>
+      <div class="muted">
+        The workstation is currently using a legacy Universal Audio software stack. Updating was deferred because the existing
+        Universal Audio account credentials need to be recovered first and the current production setup is functional.
+      </div>
+      <div class="callout warn">
+        <b>Near-term task:</b> recover the existing UA account, update UAD software during a maintenance window, reboot,
+        then verify that Apollo monitoring and Windows input initialize correctly without manually opening Console.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>Daily Startup & Recovery Procedure</h2><span>Fast reference</span></div>
+  <div class="grid">
+    <div class="card c6">
+      <div class="kicker">Normal cold start</div>
+      <div class="steps">
+        <div class="step"><b>Power/connect the Apollo.</b></div>
+        <div class="step"><b>Start Windows and let services finish loading.</b></div>
+        <div class="step"><b>Open UAD Console once if monitoring/input is not active.</b></div>
+        <div class="step"><b>Open Ableton using the known-good audio configuration.</b></div>
+      </div>
+    </div>
+
+    <div class="card c6">
+      <div class="kicker">If Apollo is not recognized after restart</div>
+      <div class="steps">
+        <div class="step"><b>Let Windows finish loading.</b></div>
+        <div class="step"><b>Power-cycle Apollo.</b><span class="muted small">Off → wait a few seconds → on.</span></div>
+        <div class="step"><b>Open UAD Console once.</b></div>
+        <div class="step"><b>Test mic + headphones before opening the project.</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>Diagnostic Tools</h2><span>Use only when needed</span></div>
+  <div class="grid">
+    <div class="card c6">
+      <div class="kicker">HWiNFO64</div>
+      <div class="muted">
+        Use for CPU temperatures, clocks, throttling, memory, GPU, drive temperatures, and hardware-error indicators.
+      </div>
+      <div class="callout"><b>Use it when:</b> fan behavior changes, performance drops, the machine feels unusually hot, or after hardware maintenance.</div>
+    </div>
+
+    <div class="card c6">
+      <div class="kicker">LatencyMon</div>
+      <div class="muted">
+        Use to investigate DPC/ISR latency, driver interference, and hard page faults that can cause pops, clicks, stutters, or dropouts.
+      </div>
+      <div class="callout"><b>Use it when:</b> audio suddenly becomes unstable, after major driver/Windows changes, or when qualifying another production machine.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>What Was Intentionally Left Alone</h2><span>Stability-first decisions</span></div>
+  <div class="card c12">
+    <table>
+      <tbody>
+        <tr><td>CPU/GPU</td><td>No overclocking or aggressive tuning.</td></tr>
+        <tr><td>BIOS</td><td>No risky latency-oriented BIOS changes.</td></tr>
+        <tr><td>Page file</td><td>No manual page-file size changes.</td></tr>
+        <tr><td>Projects</td><td>No destructive Ableton edits, random track disabling, or unapproved freezing/bouncing.</td></tr>
+        <tr><td>Plug-ins</td><td>No plug-in removals.</td></tr>
+        <tr><td>iLok</td><td>No license removals or activations changed.</td></tr>
+        <tr><td>SM7B</td><td>No unnecessary phantom power; FetHead remains optional.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>Pressure-Test Checklist</h2><span>Real-world validation</span></div>
+  <div class="grid">
+    <div class="card c7">
+      <div class="steps">
+        <div class="step"><b>Open several of the largest normal production projects.</b></div>
+        <div class="step"><b>Produce normally for 30–60 minutes.</b></div>
+        <div class="step"><b>Watch for repeatable symptoms.</b><span class="muted small">Dropouts, crackles, UAD disconnects, licensing errors, unusual fan behavior, or project-specific CPU spikes.</span></div>
+        <div class="step"><b>Use diagnostics only if a symptom appears.</b><span class="muted small">HWiNFO for thermal/power behavior; LatencyMon for driver/DPC behavior.</span></div>
+      </div>
+    </div>
+
+    <div class="card c5">
+      <div class="kicker">Success criteria</div>
+      <ul class="list small">
+        <li>Heavy projects remain clean at 48 kHz / 1024 / USB Safeguard ON.</li>
+        <li>No manual iLok launch is required.</li>
+        <li>Apollo remains stable for full sessions.</li>
+        <li>No new thermal-throttling behavior.</li>
+        <li>No repeatable dropouts during normal production.</li>
+      </ul>
+      <div class="callout green"><b>If these stay true:</b> stop optimizing. The workstation is doing its job.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>Future Options</h2><span>Not required for current use</span></div>
+  <div class="grid">
+    <div class="card c4">
+      <div class="kicker">Memory</div>
+      <div style="font-weight:800">Matched RAM expansion</div>
+      <div class="muted small">Additional matched memory may improve headroom and memory-channel configuration.</div>
+    </div>
+    <div class="card c4">
+      <div class="kicker">Storage</div>
+      <div style="font-weight:800">Archive inactive content</div>
+      <div class="muted small">Move old installers, exports, and archives away from the system drive when practical.</div>
+    </div>
+    <div class="card c4">
+      <div class="kicker">Network DSP</div>
+      <div style="font-weight:800">AudioGridder evaluation</div>
+      <div class="muted small">A future option for offloading selected plug-in processing to another wired-network computer.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>Final Status</h2><span>Public-safe handoff</span></div>
+  <div class="card c12" style="border-color:rgba(99,210,151,.35);background:linear-gradient(180deg,rgba(26,48,39,.42),rgba(12,18,25,.96))">
+    <div style="font-size:24px;font-weight:900" class="ok">Production-ready baseline established.</div>
+    <div class="muted" style="margin-top:7px;max-width:900px">
+      Continue normal production using the documented configuration. If a repeatable problem appears,
+      diagnose that symptom before changing the known-good baseline.
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  Audio Workstation Setup & Health Report • Public-Safe Edition
+  <div class="print-note">Tip: use your browser’s Print → Save as PDF if you want a static copy.</div>
+</div>
+
 </div></body></html>
